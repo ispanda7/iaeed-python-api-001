@@ -1,22 +1,31 @@
-FROM python:3.6
+# Use the official Python 3 image.
+# https://hub.docker.com/_/python
+#
+# python:3 builds a 954 MB image - 342.3 MB in Google Container Registry
+# FROM python:3
+#
+# python:3-slim builds a 162 MB image - 51.6 MB in Google Container Registry
+# FROM python:3-slim
+#
+# python:3-alpine builds a 97 MB image - 33.2 MB in Google Container Registry
+FROM python:3-alpine
 
-# make directories suited to your application 
-RUN mkdir -p /app
-# RUN mkdir -p /home/project/app/model
+# RUN apt-get update -y
+# RUN apt-get install -y python-pip
+
+COPY . /app
+
+# Create and change to the app directory.
 WORKDIR /app
-
-# copy and install packages for flask
-COPY requirements.txt /app
-
-RUN pip install --upgrade pip
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# copy contents from your local to your docker container
-COPY . /app
-# COPY ./model /home/project/app/model
+RUN chmod 444 server.py
+RUN chmod 444 requirements.txt
 
+# Service must listen to $PORT environment variable.
+# This default value facilitates local development.
 ENV PORT 8080
 
-ENTRYPOINT ["python"]
-CMD ["server.py]
+# Run the web service on container startup.
+CMD [ "python", "server.py" ]
