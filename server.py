@@ -20,7 +20,7 @@ app = Flask(__name__, static_folder='public', template_folder='views')
 app.secret = os.environ.get('SECRET')
 
 # Dream database. Store dreams in memory for now. 
-DREAMS = ['Python. Python, everywhere.']
+DREAMS = ['Python. Python3, everywhere.3']
 
 
 @app.after_request
@@ -55,4 +55,4 @@ def dreams():
     return jsonify(DREAMS)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
